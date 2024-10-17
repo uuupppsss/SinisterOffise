@@ -1,0 +1,6 @@
+@SinisterOffice666_HostAddress = http://localhost:5148
+
+GET {{SinisterOffice666_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
