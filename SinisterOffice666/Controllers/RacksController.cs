@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SinisterOffice666.DB;
 
 namespace SinisterOffice666.Controllers
 {
@@ -6,10 +7,10 @@ namespace SinisterOffice666.Controllers
     [Route("[controller]")]
     public class RacksController : ControllerBase
     {
-        [HttpPost("CreateRack")]
-        public ActionResult CreateRack()
+        readonly _666Context DbContext;
+        public RacksController(_666Context context)
         {
-
+            this.DbContext = context;
         }
     }
 }

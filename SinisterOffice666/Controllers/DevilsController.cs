@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using SinisterOffice666.DB;
 
 namespace SinisterOffice666.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class DisposeController : ControllerBase
+    public class DevilsController : ControllerBase
     {
         readonly _666Context DbContext;
-        public DisposeController(_666Context context)
+        public DevilsController(_666Context context)
         {
             this.DbContext = context;
         }
