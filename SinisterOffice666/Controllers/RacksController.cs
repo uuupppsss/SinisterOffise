@@ -6,6 +6,10 @@ namespace SinisterOffice666.Controllers
     [Route("[controller]")]
     public class RacksController : ControllerBase
     {
-        
+        [HttpPost("CreateRack")]
+        public ActionResult CreateRack()
+        {
+
+        }
     }
 }
