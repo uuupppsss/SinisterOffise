@@ -15,6 +15,13 @@ namespace SinisterOffice666.Controllers
             this.DbContext = context;
         }
 
+        [HttpGet("GetRacks")]
+        public ActionResult<List<Rack>> GetRacks()
+        {
+            List<Rack> racks = new List<Rack>(DbContext.Racks);
+            return Ok(racks);
+        }
+
         [HttpPost("CreateRack")]
         public async Task<ActionResult> CreateRack( Rack rack)
         {
@@ -30,6 +37,12 @@ namespace SinisterOffice666.Controllers
             if (id != rack.Id) return BadRequest("Invalid rack");
             DbContext.Entry(rack).State = EntityState.Modified;
             await DbContext.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpPost("Appointment")]
+        public async Task<ActionResult> Appointment(int rack_id, Devil devil)
+        {
             return Ok();
         }
     }
