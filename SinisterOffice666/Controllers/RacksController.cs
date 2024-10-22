@@ -41,8 +41,13 @@ namespace SinisterOffice666.Controllers
         }
 
         [HttpPost("Appointment")]
-        public async Task<ActionResult> Appointment(int rack_id, Devil devil)
+        public async Task<ActionResult> Appointment(Rack rack, int devil_id)
         {
+            if (rack == null || devil_id == 0)
+                return BadRequest("Invalid data");
+            rack.IdDevil = devil_id;
+            DbContext.Entry(rack).State = EntityState.Modified;
+            await DbContext.SaveChangesAsync();
             return Ok();
         }
     }
