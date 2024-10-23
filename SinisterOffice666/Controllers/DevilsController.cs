@@ -50,6 +50,4 @@ namespace SinisterOffice666.Controllers
             return Ok(devils);
         }
     }
-
-    
 }
