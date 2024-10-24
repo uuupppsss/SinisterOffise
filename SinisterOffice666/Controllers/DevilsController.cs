@@ -8,46 +8,50 @@ namespace SinisterOffice666.Controllers
     [Route("[controller]")]
     public class DevilsController : ControllerBase
     {
-        readonly _666Context DbContext;
+        readonly _666Context context;
         public DevilsController(_666Context context)
         {
-            this.DbContext = context;
+            this.context = context;
         }
 
         [HttpPost("CreateDevil")]
         public async Task<ActionResult> CreateDevil(Devil devil)
         {
             if (devil == null)
-                return BadRequest("Invalid employee");
-            DbContext.Devils.Add(devil);
-            await DbContext.SaveChangesAsync();
-            return Ok();
+                return BadRequest("Сотрудник инвалид");
+            context.Devils.Add(devil);
+            await context.SaveChangesAsync();
+            return Ok("Сотрудник создан успешно! Ура победа!");
         }
 
-        [HttpPut("UpdateDevil")]
-        public async Task<ActionResult> UpdateDevil(int id, Devil updated_devil)
+        [HttpPost("UpdateDevil")]
+        public async Task<ActionResult> UpdateDevil(Devil updated_devil)
         {
-            if (id != updated_devil.Id) return BadRequest("Invalid employee");
-            DbContext.Entry(updated_devil).State = EntityState.Modified;
-            await DbContext.SaveChangesAsync();
-            return Ok();
+            context.Devils.Update(updated_devil);
+            await context.SaveChangesAsync();
+            return Ok("Дьявол обновлён успешно! Ура победа!");
         }
 
         [HttpDelete("DeleteDevil")]
         public async Task<ActionResult> DeleteDevil(int id)
         {
-            Devil devil = await DbContext.Devils.FindAsync(id);
-            if (devil == null) return NotFound("Unknown employee");
-            DbContext.Devils.Remove(devil);
-            await DbContext.SaveChangesAsync();
-            return Ok();
+            var devils_racks = context.Racks.Where(s => s.IdDevil == id).ToList();
+            if (devils_racks.Count > 0)
+                return BadRequest("Кажется у этому сотруднику рано на покой, у него остались незавершенные дела. " +
+                    "Перед удалением сотрудника передайте его стеллажи кому то другому :>");
+            var devil_to_remove = context.Devils.Find(id);
+            if (devil_to_remove == null)
+                return BadRequest("Кажется такого дьявола нет(");
+            context.Devils.Remove(devil_to_remove);
+            await context.SaveChangesAsync();
+            return Ok("Дьявол удален успешно! Ура победа!");
         }
 
         [HttpGet("GetDevils")]
-        public ActionResult<List<Devil>> GetDevils()
+        public async Task<List<Devil>> GetDevils()
         {
-            List<Devil> devils=new List<Devil>(DbContext.Devils);
-            return Ok(devils);
+            List<Devil> devils=context.Devils.OrderBy(d=>d.Id).ToList();
+            return devils;
         }
     }
 }

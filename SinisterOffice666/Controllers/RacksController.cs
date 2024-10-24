@@ -9,46 +9,47 @@ namespace SinisterOffice666.Controllers
     [Route("[controller]")]
     public class RacksController : ControllerBase
     {
-        readonly _666Context DbContext;
+        readonly _666Context context;
         public RacksController(_666Context context)
         {
-            this.DbContext = context;
+            this.context = context;
         }
 
         [HttpGet("GetRacks")]
         public ActionResult<List<Rack>> GetRacks()
         {
-            List<Rack> racks = new List<Rack>(DbContext.Racks);
-            return Ok(racks);
+            List<Rack> racks = context.Racks.Include(r => r.IdDevilNavigation).OrderBy(r => r.Id).ToList();
+            return racks;
         }
 
         [HttpPost("CreateRack")]
         public async Task<ActionResult> CreateRack( Rack rack)
         {
-            if (rack == null) return BadRequest("Invalid rack");
-            DbContext.Racks.Add(rack);
-            await DbContext.SaveChangesAsync();
-            return Ok();
+            if (rack == null)
+                return BadRequest("Стеллаж инвалид");
+            rack.IdDevilNavigation = null;
+            context.Racks.Add(rack);
+            await context.SaveChangesAsync();
+            return Ok("Стеллаж создан! Ура победа!");
         }
 
-        [HttpPut("UpdateRack")]
-        public async Task<ActionResult> UpdateRack(int id, Rack rack)
+        [HttpPost("UpdateRack")]
+        public async Task<ActionResult> UpdateRack(Rack updated_rack)
         {
-            if (id != rack.Id) return BadRequest("Invalid rack");
-            DbContext.Entry(rack).State = EntityState.Modified;
-            await DbContext.SaveChangesAsync();
-            return Ok();
+            if (updated_rack == null)
+                return BadRequest("Стеллаж инвалид");
+            context.Racks.Update(updated_rack);
+            await context.SaveChangesAsync();
+            return Ok("Стеллаж обновлён! Ура победа!");
         }
 
-        [HttpPost("Appointment")]
-        public async Task<ActionResult> Appointment(Rack rack, int devil_id)
+        [HttpDelete("RemoveRack")]
+        public async Task<ActionResult> RemoveRack(int id)
         {
-            if (rack == null || devil_id == 0)
-                return BadRequest("Invalid data");
-            rack.IdDevil = devil_id;
-            DbContext.Entry(rack).State = EntityState.Modified;
-            await DbContext.SaveChangesAsync();
-            return Ok();
+            var rack_to_remove = context.Racks.Find(id);
+            context.Racks.Remove(rack_to_remove);
+            await context.SaveChangesAsync();
+            return Ok("Стеллаж удалён! Ура победа!");
         }
     }
 }

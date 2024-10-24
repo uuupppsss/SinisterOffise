@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SinisterOffice666.DB;
 
 namespace SinisterOffice666.Controllers
@@ -17,11 +18,11 @@ namespace SinisterOffice666.Controllers
         public async Task<ActionResult> DisposeRack(Rack rack)
         {
             if(rack==null)
-                return BadRequest("Invalid rack");
-            Disposal disposal = new Disposal() { Id=rack.Id, Title=rack.Title, Year=rack.YearBuy, Date=DateTime.Now};
+                return BadRequest("Стеллаж инвалид");
+            Disposal disposal = new Disposal() { Id=rack.Id, Title=rack.Title, Year=rack.YearBuy};
             DbContext.Disposals.Add(disposal);
             await DbContext.SaveChangesAsync();
-            return Ok();
+            return Ok("Стеллаж утилизирован! Ура победа!");
         }
     }
 }
